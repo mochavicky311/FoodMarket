@@ -1,0 +1,41 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block main %}
+
+<main class="main">
+    <section id="background" class="text-center padding-top-bottom">
+    <div class="container-fluid">
+        <h1>Food Market</h1><br>
+        <h3>There is no sincere love than the love of food</h3>
+        <br><br>
+        <a href="#vendors"><button class="btn btn-secondary">Order Now</button></a>
+    </div>
+    </section>
+
+
+    <!-- Cards - Menus -->
+    <section class="text-center">
+    <h3 id="vendors">List of Vendors</h3><br>
+    <div class="container-fluid padding">
+        <div class="row padding">
+
+            {% for restaurant in restaurants %}
+            <div class="col-md-4">
+                <div class="card">
+                    <a href="{% url 'ordering' restaurant_id=restaurant.restaurantid %} ">
+                    <img class="card-img-top" src="{{ restaurant.image.url }}">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ restaurant.restaurantname }}</h4>
+                    </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    </section>
+</main>
+{% endblock %}
+

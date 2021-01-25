@@ -1,0 +1,84 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block script %}
+    <script type="text/javascript">
+		$(document).ready(function() {
+
+			$('#order-btn').click(function (){
+			    if(!confirm("Confirm order?"))
+			        return false;
+            })
+
+		});
+	</script>
+{% endblock %}
+
+{% block main %}
+	<main class="main">
+	<div class="container padding">
+			<div class="row">
+				<div class="col-lg-8 col-12">
+
+                    <!-- Delivery and personal details -->
+					<form action="{% url 'confirm_order' %}" method="post">
+                        {% csrf_token %}
+						<div class="checkout-container mb-5">
+
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div {% if message.tags %} class="{{ message.tags }} {% endif %} alert-dismissible fade show"  role="alert">
+                                    {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+
+							<h3 class="text-center">Delivery and Personal Details</h3>
+								<p><br/>Delivery Address: </p>
+								<input class="text-input text-input-white" type="text" name="add" value="{{ request.user.address }}" placeholder="Address" required>
+						        <p><br/>Name: </p>
+                                <input class="text-input text-input-white" type="text" value="{{ request.user.first_name }} {{ request.user.last_name }}" name="name" placeholder="Name" required>
+                                <p><br/>Contact Number: </p>
+                                <input class="text-input text-input-white" type="text" value="{{ request.user.contactnum }}" name="contact" placeholder="Phone Number" required>
+                                <input class="btn btn-primary btn-block mt-4" id="order-btn" type="submit" value="Pay">
+                        </div>
+					</form>
+				</div>
+
+            <!-- Order Summary -->
+				<div class="col-lg-4 col-0 text-center">
+					<aside class="side-cart mt-4">
+						<h4 class="">Order Summary</h4>
+						<form action="">
+							<div class="container cart-content">
+                                {% for product in request.session.cart.products %}
+								<div class="row">
+									<div class="col-6 text-lg-left"><p>{{ product.productname }}</p></div>
+									<div class="col-6 text-lg-right"><p>RM {{ product.productprice|floatformat:2 }} x{{ product.qty }}</p></div>
+								</div>
+                                {% endfor %}
+								
+								<div class="container cart-total">
+									<div class="row">
+										<div class="col-6 text-lg-left"><strong><p>Subtotal: </p></strong></div>
+										<div class="col-6 text-lg-right"><strong><p>RM {{ request.session.cart.subtotal|floatformat:2 }}</p></strong></div>
+									</div>
+									<div class="row">
+										<div class="col-6 text-lg-left"><strong><p>Delivery Fee: </p></strong></div>
+										<div class="col-6 text-lg-right"><strong><p>RM {{ request.session.cart.deliveryfee|floatformat:2 }}</p></strong></div>
+									</div>
+									<div class="row">
+										<div class="col-6 text-lg-left"><strong><p>Total</p></strong></div>
+										<div class="col-6 text-lg-right"><strong><p>RM {{ request.session.cart.total|floatformat:2 }}</p></strong></div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</aside>
+				</div>
+			</div>	
+	</div>
+	</main>
+{% endblock %}

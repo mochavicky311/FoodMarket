@@ -1,0 +1,50 @@
+{% extends "customer/layout.html" %}
+
+{% block main %}
+	<main class="main text-center py-5" id="background">
+		<div class="container-fluid padding">
+			<h1>FOOD MARKET</h1>
+			<h4>There is no sincere love than the love of food</h4>		
+		</div>
+
+		<div class="container form-container">
+			<h4>Welcome!</h4>
+
+            {% if messages %}
+                {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags }} {% endif %} alert-dismissible fade show"  role="alert">
+                    {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+			<form action="{% url 'register_view' %}" method="post">
+                {% csrf_token %}
+				<label for="user-types">Choose your user type:</label>
+					<select name="user-types" id="user-types">
+					  <option value="Customer">Customer</option>
+					  <option value="Vendor">Vendor</option>
+					  <option value="Rider">Rider</option>
+					</select>
+				<div class="input-group">
+				 <input type="text" class="form-control text-input" name="fname" placeholder="First name" required>
+				 <input type="text" class="form-control text-input" name="lname" placeholder="Last name" required>
+				</div>
+                <input class="text-input" type="text" name="username" placeholder="Choose your username" required>
+				<input class="text-input" type="text" name="email" placeholder="Enter your email" required>
+                <input class="text-input" type="text" name="contact" placeholder="Enter your contact" required>
+                <input class="text-input" type="text" name="address" placeholder="Enter your address" required>
+				<input class="text-input" type="password" name="password" placeholder="Insert your password" required>
+                <input class="text-input" type="password" name="confirmation" placeholder="Insert your password again" required>
+				
+				<input class="btn btn-primary btn-block mt-4" type="submit" value="Create My Account">
+			</form>
+
+			<p>Already have an account? <a href="{% url 'login_view' %}">Login</a></p>
+		</div>
+		
+	</main>
+{% endblock %}

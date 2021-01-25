@@ -1,0 +1,171 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block script %}
+    <script src="{% static 'customer/handleCart.js' %}" type="text/javascript"></script>
+    <script src="{% static 'customer/handleReview.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+{% block main %}
+<main class="main">
+
+    <div class="container-fluid">
+    <div class="row jumbotron">
+        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
+            <h2 class="RestaurantName">{{ restaurant.restaurantname }}</h2>
+            <p class="RestaurantDescription">{{ restaurant.description }}</p>
+        </div>
+    </div>
+    </div>
+
+
+    <div class="container-fluid text-center padding">
+        <div class="row">
+
+        <!-- Cards - Menus -->
+        <div class="col-lg-8 col-0">
+            <h3>Menu</h3>
+
+            {% if messages %}
+                {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags }} {% endif %} alert-dismissible fade show"  role="alert">
+                    {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="container-fluid padding">
+                <div class="row padding">
+
+                    {% for product in products %}
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a href="">
+                            <img class="card-img-top" src="{{ product.productpic.url }} ">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ product.productname }}</h4>
+                                <p>RM {{ product.productprice }}</p>
+                                <a href=""><button data-productid="{{ product.productid }}"
+                                                   data-restaurantid="{{ restaurant.restaurantid }}"
+                                   class="btn btn-primary add-cart">Add to Cart</button></a>
+                            </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Cards - Reviews -->
+                <div class="row padding">
+                    <h4>Reviews</h4>
+                    {% for review in reviews %}
+                        <div class="card w-100 mb-4">
+                            <div class="card-body text-left">
+                                <p class="card-title">
+                                <strong>{{ review.userid.first_name }}</strong>
+                                    (Food ordered: {{ review.productid.productname }})
+                                </p>
+                                <p>Rating: {{ review.rating }} out of 5</p>
+                                <p>{{ review.comment }}</p>
+
+                                {% if user.is_authenticated %}
+                                    {% if request.user == review.userid %}
+                                    <button type="button" class="btn-sm del-comment-btn" data-reviewid="{{ review.reviewid }}" data-restaurantid="{{ restaurant.restaurantid }}">
+                                        Delete review</button>
+                                    {% endif %}
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="container text-left">
+                            <p>There is no review.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Write review -->
+                {% if user.is_authenticated and products %}
+                    <form class="text-left" action="{% url 'write_review' %}" method="post">
+                    {% csrf_token %}
+                        <h5 class="mb-4">Write a Review</h5>
+                        <label for="products">Choose an item: </label>
+                        <select name="products" required>
+                        {% for product in products %}
+                            <option value="{{ product.productid }}">{{ product.productname }}</option>
+                        {% endfor %}
+                        </select>
+                        <br>
+                        <label for="rating">Rating: </label>
+                        <input type="number" name="rating" min="1" max="5" required> out of 5
+                        <input class="text-input text-input-white" type="text" name="comment" placeholder="Comment (optional)">
+                        <input name="restaurantid" value="{{ restaurant.restaurantid }}" hidden>
+                        <input class="btn btn-primary" type="submit" value="Submit">
+                    </form>
+                {% endif %}
+
+            </div>
+        </div>
+
+
+        <!-- Cart -->
+        <div class="col-lg-4 col-0">
+            <aside class="side-cart">
+                <h4>Your Cart</h4>
+                {% if request.session.cart and request.session.cart.restaurantid == restaurant.restaurantid %}
+                    <form action="{% url 'confirm_order_view' %}" method="post">
+                    {% csrf_token %}
+                        <div class="container cart-content">
+
+                            {% for product in request.session.cart.products %}
+                            <div class="row">
+                                <div class="col-6 text-lg-left"><p>{{ product.productname }}</p></div>
+                                <div class="col-6 text-lg-right">
+                                    <p>RM {{ product.productprice|floatformat:2 }}
+                                        <input type="number" min="1" max="20" class="qty-input input-sm" data-productid="{{ product.productid }}" name="qty" value="{{ product.qty }}">
+                                        <button type="button" class="btn-sm remove-btn" data-productid="{{ product.productid }}" data-restaurantid="{{ restaurant.restaurantid }}">
+                                            <span class="far fa-trash-alt"></span>
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                            {% empty %}
+                                <div class="text-center"><p>There is no item in your cart.</p></div>
+                            {% endfor %}
+
+                        {% if request.session.cart.products|length > 0 %}
+                            <div class="container cart-total">
+                                <div class="row">
+                                    <div class="col-6 text-lg-left"><strong><p>Subtotal: </p></strong></div>
+                                    <div class="col-6 text-lg-right"><strong><p>{{ request.session.cart.subtotal|floatformat:2 }}</p></strong></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 text-lg-left"><strong><p>Delivery Fee: </p></strong></div>
+                                    <div class="col-6 text-lg-right"><strong><p>{{ request.session.cart.deliveryfee|floatformat:2 }}</p></strong></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 text-lg-left"><strong><p>Total</p></strong></div>
+                                    <div class="col-6 text-lg-right"><strong><p>{{ request.session.cart.total|floatformat:2 }}</p></strong></div>
+                                </div>
+                            </div>
+                        </div>
+                        <input class= "btn btn-secondary" type="submit" value="Checkout">
+                        {% endif %}
+                    </form>
+
+                {% else %}
+                    {% if user.is_authenticated %}
+                        <div class="text-center"><p>There is no item in your cart.</p></div>
+                    {% else %}
+                        <div class="text-center"><p>Please sign in to add item.</p></div>
+                    {% endif %}
+                {% endif %}
+            </aside>
+        </div>
+    </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block script %}
+    <script src="{% static 'customer/handleReorder.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+{% block main %}
+<main class="main">
+    {% if messages %}
+        {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags }} {% endif %} alert-dismissible fade show"  role="alert">
+            {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+<!-- Active Orders -->
+<div class="container-fluid mt-5 padding">
+	<h2 class="orderlistheader">Active Orders</h2>
+	{% for order_item in order_items %}
+        {% if order_item.status not in "Completed, Rejected" %}
+        <div class="card shadow my-3 px-2">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
+                    <h3 class="OrderHeader">{{ order_item.restaurantid.restaurantname }}</h3>
+                    <p class="cardContent">
+                        <b>Items Ordered: </b><br>
+                        {% for order_product in order_products %}
+                            {% if order_product.orderid.orderid == order_item.orderid %}
+                            {{ order_product.amount }}x {{ order_product.productid.productname }}
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-2 text-center text-center">
+                    <p><b>Status: {{ order_item.status }}</b></p>
+                      <a href="#"><button type="button" class="btn btn-secondary reorder-btn"
+                                          data-orderid="{{ order_item.orderid }}"
+                                          data-restaurantid="{{ order_item.restaurantid.restaurantid }}">Reorder
+                    </button></a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% empty %}
+    <p>You have no active order.</p>
+    {% endfor %}
+</div><hr>
+
+<div class="container-fluid padding">
+	<h2 class="orderlistheader">Past Orders</h2>
+        {% for order_item in order_items %}
+            {% if order_item.status in "Completed, Rejected" %}
+            <div class="card shadow my-3 px-2">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
+                    <h3 class="OrderHeader">{{ order_item.restaurantid.restaurantname }}</h3>
+                    <p class="cardContent">
+                        <b>Items Ordered: </b><br>
+                        {% for order_product in order_products %}
+                            {% if order_product.orderid.orderid == order_item.orderid %}
+                            {{ order_product.amount }}x {{ order_product.productid.productname }}
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-2 text-center text-center">
+                      <a href="#"><button type="button" class="btn btn-secondary reorder-btn"
+                                          data-orderid="{{ order_item.orderid }}"
+                                          data-restaurantid="{{ order_item.restaurantid.restaurantid }}">Reorder
+                    </button></a>
+                </div>
+            </div>
+            </div>
+            {% endif %}
+            {% empty %}
+            <p>You have no past order.</p>
+        {% endfor %}
+</div>
+</main>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "customer/layout.html" %}
+
+    {% block script %}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.radio-btn').change(function(){
+				if(this.value === "0.00"){
+					$("#other-value").prop("disabled", false);	
+				} else {
+					$("#other-value").prop("disabled", true);	
+				}
+			});
+
+			$('#donate-btn').click(function (){
+			    if(!confirm("Confirm donate?"))
+			        return false;
+            })
+		});
+	</script>
+    {% endblock %}
+
+{% block main %}
+<main class="main py-5 text-center" id="background">
+
+		<div class="container form-container">
+
+            {% if messages %}
+                {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags }} {% endif %} alert-dismissible fade show"  role="alert">
+                    {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+			<p><strong>Your donation can help a lot!</strong></p>
+			<p>Every month, we will use the donation collected to buy food from our vendors and send them to mosques.</p>
+			<P>Please support us to provide food to those most in need to fulfil their basic needs. Together we can make a difference in their lives!</P><hr>
+			<h4>Select Donation Amount</h4>
+
+			<form action="{% url 'donation' %}" method="post">
+                {% csrf_token %}
+				<div class="container">
+					<div class="row justify-content-center">
+						<input class="radio-btn" type="radio" id="donation1" name="select" value="50.00">
+  						<label class="radio-label col-4" for="donation1">RM 50</label>
+
+						<input class="radio-btn" type="radio" id="donation2" name="select" value="100.00">
+  						<label class="radio-label col-4" for="donation2">RM 100</label>	
+
+						<input class="radio-btn" type="radio" id="donation3" name="select" value="200.00" checked>
+  						<label class="radio-label col-4" for="donation3">RM 200</label>	
+					
+						<input class="radio-btn other-radio-btn" type="radio" id="donation4" name="select" value="0.00">
+  						<label class="radio-label col-4" for="donation4">Others</label>	
+					</div>
+
+					<div class="input-group mb-4 mt-4">
+						 <span class="input-group-text">RM</span>
+						 <input type="text" id="other-value" class="form-control" placeholder="0.00" name="amount" disabled="True">
+					</div>
+				</div>
+				
+				<input class="btn btn-primary" id="donate-btn" type="submit" value="Donate">
+			</form>
+		</div>	
+</main>	
+{% endblock %}

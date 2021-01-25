@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,700');
+
+
+
+/*---Media Queries --*/
+@media (max-width: 992px) {
+
+}
+@media (max-width: 768px) {
+
+}
+@media (max-width: 576px) {
+
+}
+
+
+/*---Firefox Bug Fix --*/
+.carousel-item {
+  transition: -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+  -webkit-backface-visibility: visible;
+  backface-visibility: visible;
+}
+/*--- Fixed Background Image --*/
+figure {
+  position: relative;
+  width: 100%;
+  height: 60%;
+  margin: 0!important;
+}
+.fixed-wrap {
+  clip: rect(0, auto, auto, 0);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+#fixed {
+  background-image: url('img/mac.png');
+  position: fixed;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+  will-change: transform;
+}
+/*--- Bootstrap Padding Fix --*/
+[class*="col-"] {
+    padding: 1rem;
+}
+
+body{
+	font-family: Verdana, sans-serif;
+}
+.navbar{
+	background-color: #1A1A1A;
+	padding: 1rem;
+}
+.navbar-brand{
+	color: #a8acb9;
+}
+.navbar-brand:hover{
+	color: #a8acb9;
+}
+.nav-link{
+	color: #a8acb9;
+}
+.nav-link:hover{
+	color: #FFF;
+}
+footer{
+	
+	bottom: 0;
+	background-color: #1A1A1A;
+	color: #d5d5d5;
+	padding-top: 2rem;
+}
+footer a{
+	color: #d5d5d5;
+}
+.card-img-top{
+	width: 100%;
+	height: 30vh;
+	object-fit: cover;	
+}
+.jumbotron{
+	padding: 1rem;
+	border-radius: 0;
+}
+.padding{
+	padding-bottom: 2rem;
+}
+.pos-center{
+	height: 100%;
+	top: 50%;
+	
+}
+.OrderHeader{
+	padding-left: 1rem;
+	font-size: 2rem;
+}
+.card .row div .cardContent{
+	padding-left: 1.6rem;
+}
+.card .row div .cardContent a{
+	padding-top: 2px;
+	padding-bottom: 2px;
+	font-size: .9rem;
+}
+.shadow{
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+}
+.margin{
+	margin: 6px;
+}
+.OrderTotal{
+	font-size:1.5rem;
+	padding: 0px;
+}
+.donation{
+	transform: translateX(50%);
+	margin-top: 1rem;
+	width: 50vw;
+	padding: 1rem;
+}
+.donation-container{
+	position: relative;
+}
+.totalDonation{
+	font-size: 2.8rem;
+}
+.AdminManageHeader{
+	font-size: 1.2rem;
+	padding-bottom: 2rem;
+}
+.nav-link-1{
+	color: #3f3f3f;
+	padding: 1rem;
+}
+.nav-link-1:hover{
+	color: #d5d5d5;
+}
+
+/*
+Extra small (xs) devices (portrait phones, less than 576px)
+No media query since this is the default in Bootstrap
+
+Small (sm) devices (landscape phones, 576px and up)
+@media (min-width: 576px) { ... }
+
+Medium (md) devices (tablets, 768px and up)
+@media (min-width: 768px) { ... }
+
+Large (lg) devices (desktops, 992px and up)
+@media (min-width: 992px) { ... }
+
+Extra (xl) large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) { ... }
+*/
+
+
+
+
+
+
+
+

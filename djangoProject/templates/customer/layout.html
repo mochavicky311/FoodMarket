@@ -1,0 +1,110 @@
+{% url 'index' as index_url %}
+{% url 'donation' as donation_url %}
+{% url 'orders' as orders_url %}
+
+{% if request.session.cart.restaurantid|length > 0 %}
+    {% url 'ordering' request.session.cart.restaurantid as cart_url %}
+{% endif %}
+
+{% url 'login_view' as login_url %}
+{% url 'logout_view' as logout_url %}
+{% url 'register_view' as register_url %}
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<title>Food Market</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'customer/style.css' %}">
+
+    {% block script %}
+    {% endblock %}
+</head>
+<body>
+    <header>
+		<!-- Navigation Bar -->
+		<nav class="navbar navbar-expand-md navbar-dark sticky-top">
+			<div class="container-fluid">
+			<a class="navbar-brand" href="{% url 'index' %}"><h2>Food Market</h2></a>
+                {% if user.is_authenticated %}
+                <span class="text-white">Hi, {{ user.first_name }}! Your E-Wallet balance is RM {{ user.ewallet }}</span>
+                {% endif %}
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto">
+				  <li class="nav-item {% if request.path == index_url %} active {%endif%}">
+				    <a class="nav-link" href="{% url 'index' %}">Main</a>
+				  </li>
+                {% if user.usertype != 'Admin' %}
+				  <li class="nav-item {% if request.path == donation_url %} active {%endif%}">
+				    <a class="nav-link" href="{% url 'donation' %}">Donate</a>
+				  </li>
+                {% endif %}
+                {% if user.is_authenticated %}
+				  <li class="nav-item {% if request.path == orders_url %} active {%endif%}">
+				    <a class="nav-link" href="{% url 'orders' %}">Orders</a>
+				  </li>
+				  <li class="nav-item {% if request.path == cart_url %} active {%endif%}">
+				    <a class="nav-link" id="cart-link" href="{{ cart_url }}">Cart</a>
+				  </li>
+                {% endif %}
+
+                    <li class="nav-item
+                        {% if request.path == register_url or request.path == login_url or request.path == logout_url %}
+                            active
+                        {% endif %}">
+
+                        {% if request.path == register_url %}
+                            <a class="nav-link" href="{% url 'register_view' %}">Register</a>
+                        {% elif request.path == login_url %}
+                            <a class="nav-link" href="{% url 'login_view' %}">Log In</a>
+                        {% else %}
+                            {% if user.is_authenticated %}
+                            <a class="nav-link" href="{% url 'logout_view' %}">Log Out</a>
+                            {% else %}
+                            <a class="nav-link" href="{% url 'login_view' %}">Log In</a>
+                            {% endif %}
+                        {% endif %}
+                    </li>
+				</ul>
+			</div>
+			</div>
+		</nav>
+	</header>
+
+
+    {% block main %}
+    {% endblock %}
+
+<footer>
+	<div class="container-fluid padding">
+	<div class="row text-center">
+		<div class="col-md-4">
+			<p>Contact Us: 555-555-5555</p>
+		</div>
+
+		<div class="col-md-4">
+			<p>Our hours: Daily 10am - 5pm</p>
+		</div>
+
+		<div class="col-md-4">
+			<p>Please Dont contact us</p>
+		</div>
+	</div>
+	</div>
+</footer>
+</body>
+</html>
